@@ -1,45 +1,28 @@
+
+%define CVSDATE 20010119
+
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.2
-Release: 9
+Version: 4.2.%{CVSDATE}
+Release: 3
 Copyright: distributable
 Group: Development/Debuggers
 URL: http://www.wi.leidenuniv.nl/~wichert/strace
-Source0: http://www.liacs.nl/~wichert/strace/strace-%{version}.tar.gz
-Patch0: strace-3.0.14elf.patch
-Patch1: ftp://ftp.azstarnet.com/pub/linux/axp/glibc/strace-3.1-glibc.patch
-Patch2: strace-3.1-sparc.patch
-Patch3: strace-3.1-sparcglibc.patch
-Patch4: strace-3.1-sparc2.patch
-Patch5: strace-3.1-sparc3.patch
-Patch6: strace-3.1-sparc4.patch
-Patch7: strace-3.1-prctldomainname.patch
-Patch8: strace-3.1-alpha.patch
-Patch9: strace-3.1-gafton.patch
-Patch10: strace-3.1-sparc5.patch
-Patch11: strace-3.1-jbj.patch
-Patch12: strace-3.1-arm.patch
-Patch13: strace-3.1-compat21.patch
-Patch14: strace-3.1-clone.patch
-Patch15: strace-3.1-vfork.patch
-Patch16: strace-3.1-jbj1.patch
-Patch31: strace-3.99-sparc.patch
-
-Patch50: strace-3.99-alphaosf.patch
-Patch51: strace-3.99.1-seclvl.patch
-Patch52: strace-3.99.1-sparc.patch
-Patch53: strace-4.1-sparc.patch
-
-Patch60: strace-4.2-ia64.patch
-Patch61: strace-4.2-stat64.patch
-Patch62: strace-4.2-sparc2.patch
-Patch63: strace-4.2-putmsg.patch
-Patch64: strace-4.2-newsysc.patch
-Patch65: strace-4.2-getdents64.patch
-Patch66: strace-4.2-sparc3.patch
+Source0: strace-%{CVSDATE}.tar.gz
+Patch1: strace-4.2-sparc.patch
+Patch2: strace-4.2-module.patch
+Patch3: strace-4.2-sparc2.patch
+Patch4: strace-4.2-putmsg.patch
+Patch5: strace-4.2-newsysc.patch
+Patch6: strace-4.2-getdents64.patch
+Patch7: strace-4.2-sparc3.patch
+Patch8: strace-4.2.2-s390.patch
+Patch9: strace-4.2-ia64.patch
+Patch10: strace-4.2-sparc4.patch
+Patch11: strace-4.2.2-include.patch
+Patch12: strace-4.2-time.patch
 
 BuildRoot: /var/tmp/%{name}-root
-ExcludeArch: ia64
 
 %description
 The strace program intercepts and records the system calls called and
@@ -52,50 +35,28 @@ Install strace if you need a tool to track the system calls made and
 received by a process.
 
 %prep
-%setup -q
-
-#%patch0 -p1 -b .elf
-#%patch1 -p1 -b .glibc
-#%patch2 -p1 -b .sparc
-#%patch3 -p1 -b .sparcglibc
-#%patch4 -p1 -b .sparc2
-#%patch5 -p1 -b .sparc3
-#%patch6 -p1 -b .sparc4
-#%patch7 -p1 -b .misc
-#%patch8 -p1 -b .alpha
-#%patch9 -p1 -b .gafton
-#%patch10 -p1 -b .sparc5
-#%patch11 -p1 -b .jbj
-#%patch12 -p1 -b .arm
-#%patch13 -p1 -b .compat21
-#%patch14 -p0 -b .clone
-#%patch15 -p1 -b .vfork
-#%patch16 -p1 -b .jbj1
-
-#%patch31 -p1 -b .sparc
-
-#%patch50 -p1
-#%patch51 -p1
-#%patch52 -p1
-%patch53 -p1 -b .sparc
-
-%patch60 -p1 -b .ia64
-%patch61 -p1 -b .stat64
-%patch62 -p1 -b .sparc2
-%patch63 -p1 -b .putmsg
-%patch64 -p1 -b .newsysc
-%patch65 -p1 -b .getdents64
-%patch66 -p1 -b .sparc3
+%setup -q -n strace
+%patch2 -p1 -b .module
+%patch4 -p1 -b .putmsg
+%ifnarch s390
+%patch5 -p1 -b .newsysc
+%patch6 -p1 -b .getdents64
+%endif
+%patch8 -p1 -b .s390
+%ifarch ia64
+%patch9 -p1 -b .ia64
+%endif
+%ifarch sparc sparc64
+%patch1 -p1 -b .sparc
+%patch3 -p1 -b .sparc2
+%patch7 -p1 -b .sparc3
+%patch10 -p1 -b .sparc4
+%endif
+%patch11 -p1 -b .incl
+%patch12 -p1 -b .time
 
 %build
-libtoolize --copy --force
-aclocal
-autoheader
-autoconf
-
-#OS=`echo ${RPM_OS} | tr '[A-Z]' '[a-z]'`
-#CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr ${RPM_ARCH}-redhat-${OS}
-
+./cvsbuild
 %configure
 make
 
@@ -115,6 +76,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/strace.1*
 
 %changelog
+* Wed Feb 14 2001 Jakub Jelinek <jakub@redhat.com>
+- #include <time.h> in addition to <sys/time.h>
+
+* Fri Jan 26 2001 Karsten Hopp <karsten@redhat.com>
+- clean up conflicting patches. This happened only
+  when building on S390
+
+* Fri Jan 19 2001 Bill Nottingham <notting@redhat.com>
+- update to CVS, reintegrate ia64 support
+
+* Sat Dec  8 2000 Bernhard Rosenkraenzer <bero@redhat.com>
+- Get S/390 support into the normal package
+
+* Sat Nov 18 2000 Florian La Roche <Florian.LaRoche@redhat.de>
+- added S/390 patch from IBM, adapting it to not conflict with
+  IA64 patch
+
 * Sat Aug 19 2000 Jakub Jelinek <jakub@redhat.com>
 - doh, actually apply the 2.4 syscalls patch
 - make it compile with 2.4.0-test7-pre4+ headers, add
