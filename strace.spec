@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 8
+Release: 9
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Thu Sep  5 2002 Roland McGrath <roland@redhat.com>
+- newer version of the clone fixing patch to make fork work right
+
 * Mon Sep  2 2002 Jakub Jelinek <jakub@redhat.com> 4.4-8
 - newer version of the clone fixing patch (Roland McGrath)
 - aio syscalls for i386/ia64/ppc (Ben LaHaise)
