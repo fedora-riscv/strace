@@ -1,28 +1,23 @@
-
-%define CVSDATE 20010119
-
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.2.%{CVSDATE}
-Release: 7
-Copyright: distributable
+Version: 4.3
+Release: 1
+License: BSD
 Group: Development/Debuggers
-URL: http://www.wi.leidenuniv.nl/~wichert/strace
-Source0: strace-%{CVSDATE}.tar.gz
+URL: http://sourceforge.net/projects/strace/
+Source0: %{name}-%{version}.tar.gz
 Patch1: strace-4.2-sparc.patch
-Patch2: strace-4.2-module.patch
 Patch3: strace-4.2-sparc2.patch
 Patch4: strace-4.2-putmsg.patch
-Patch5: strace-4.2-newsysc.patch
-Patch6: strace-4.2-getdents64.patch
+#Patch5: strace-4.2-newsysc.patch
+#Patch6: strace-4.2-getdents64.patch
 Patch7: strace-4.2-sparc3.patch
-Patch8: strace-4.2-ia64.patch
-Patch9: strace-4.2-sparc4.patch
-Patch10: strace-4.2.2-include.patch
-Patch11: strace-4.2-time.patch
-Patch12: strace-4.2.20010119-s390.patch
-Patch13: strace-4.2.20010119-s390-1.patch
+Patch8: strace-4.2.2-s390.patch
+Patch9: strace-4.3-ia64.patch
+Patch10: strace-4.2-sparc4.patch
+Patch11: strace-4.2.2-include.patch
 BuildRoot: %{_tmppath}/%{name}-root
+BuildPrereq: autoconf
 
 %description
 The strace program intercepts and records the system calls called and
@@ -35,28 +30,30 @@ Install strace if you need a tool to track the system calls made and
 received by a process.
 
 %prep
-%setup -q -n strace
-%patch2 -p1 -b .module
+%setup -q
 %patch4 -p1 -b .putmsg
-%ifnarch s390
-%patch5 -p1 -b .newsysc
-%patch6 -p1 -b .getdents64
+
+#%ifnarch s390
+#%patch5 -p1 -b .newsysc
+#%patch6 -p1 -b .getdents64
+#%endif
+
+%ifarch s390 s390x
+%patch8 -p1 -b .s390
 %endif
+
 %ifarch ia64
-%patch8 -p1 -b .ia64
+%patch9 -p1 -b .ia64
 %endif
+
 %ifarch sparc sparc64
 %patch1 -p1 -b .sparc
 %patch3 -p1 -b .sparc2
 %patch7 -p1 -b .sparc3
-%patch9 -p1 -b .sparc4
+%patch10 -p1 -b .sparc4
 %endif
-%patch10 -p1 -b .incl
-%patch11 -p1 -b .time
-%ifarch s390 s390x
-%patch12 -p1 -b .s390
-%patch13 -p1 -b .s390-1
-%endif
+
+%patch11 -p1 -b .incl
 
 %build
 ./cvsbuild
@@ -64,25 +61,23 @@ received by a process.
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
-mkdir -p ${RPM_BUILD_ROOT}%{_prefix}/bin
-%makeinstall man1dir=${RPM_BUILD_ROOT}%{_mandir}/man1
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_mandir}/man1
+mkdir -p %{buildroot}%{_bindir}
+%makeinstall man1dir=%{buildroot}%{_mandir}/man1
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_prefix}/bin/strace
-%{_mandir}/man1/strace.1*
+%{_bindir}/strace
+%{_mandir}/man1/*
 
 %changelog
-* Thu Oct 23 2001 Karsten Hopp <karsten@redhat.de>
-- new patch from IBM
-
-* Thu Jul 05 2001 Karsten Hopp <karsten@redhat.de>
-- new patch from IBM
+* Wed Jul 18 2001 Preston Brown <pbrown@redhat.com> 4.3-1
+- new upstream version.  Seems to have integrated most new syscalls
+- tracing threaded programs is now functional.
 
 * Mon Jun 11 2001 Than Ngo <than@redhat.com>
 - port s390 patches from IBM
