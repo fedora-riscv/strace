@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 4
+Release: 5
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Thu May 23 2002 Tim Powers <timp@redhat.com>
+- automated rebuild
+
 * Tue Apr 16 2002 Jakub Jelinek <jakub@redhat.com> 4.4-4
 - fix for the last patch by Jeff Law (#62591)
 
