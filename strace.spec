@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 7
+Release: 8
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -20,6 +20,7 @@ Patch16: strace-4.4-newsyscalls.patch
 Patch17: strace-4.4-threadarea.patch
 Patch18: strace-4.4-sarestorer.patch
 Patch19: strace-4.4-clone-fixes.patch
+Patch20: strace-4.4-aio.patch
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -56,7 +57,10 @@ received by a process.
 %patch16 -p1 -b .newsyscalls
 %patch17 -p1 -b .threadarea
 %patch18 -p1 -b .sarestorer
+%ifnarch sparc sparc64 ia64
 %patch19 -p1 -b .clone-fixes
+%endif
+%patch20 -p1 -b .aio
 
 %build
 #./cvsbuild
@@ -78,6 +82,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Mon Sep  2 2002 Jakub Jelinek <jakub@redhat.com> 4.4-8
+- newer version of the clone fixing patch (Roland McGrath)
+- aio syscalls for i386/ia64/ppc (Ben LaHaise)
+
 * Wed Aug 28 2002 Jakub Jelinek <jakub@redhat.com> 4.4-7
 - fix strace -f (Roland McGrath, #68994)
 - handle ?et_thread_area, SA_RESTORER (Ulrich Drepper)
