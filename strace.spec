@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.5.1
-Release: 1
+Version: 4.5.2
+Release: 1.1
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -75,6 +75,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Mon Mar  1 2004 Roland McGrath <roland@redhat.com> 4.5.2-1
+- new upstream version, sched_* calls (#116990), show core flag (#112117)
+
+* Fri Feb 13 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
 * Thu Nov 13 2003 Roland McGrath <roland@redhat.com> 4.5.1-1
 - new upstream version, more fixes (#108012, #105366, #105359, #105358)
 
