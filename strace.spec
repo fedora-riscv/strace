@@ -4,7 +4,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.2.%{CVSDATE}
-Release: 3
+Release: 7
 Copyright: distributable
 Group: Development/Debuggers
 URL: http://www.wi.leidenuniv.nl/~wichert/strace
@@ -16,13 +16,13 @@ Patch4: strace-4.2-putmsg.patch
 Patch5: strace-4.2-newsysc.patch
 Patch6: strace-4.2-getdents64.patch
 Patch7: strace-4.2-sparc3.patch
-Patch8: strace-4.2.2-s390.patch
-Patch9: strace-4.2-ia64.patch
-Patch10: strace-4.2-sparc4.patch
-Patch11: strace-4.2.2-include.patch
-Patch12: strace-4.2-time.patch
-
-BuildRoot: /var/tmp/%{name}-root
+Patch8: strace-4.2-ia64.patch
+Patch9: strace-4.2-sparc4.patch
+Patch10: strace-4.2.2-include.patch
+Patch11: strace-4.2-time.patch
+Patch12: strace-4.2.20010119-s390.patch
+Patch13: strace-4.2.20010119-s390-1.patch
+BuildRoot: %{_tmppath}/%{name}-root
 
 %description
 The strace program intercepts and records the system calls called and
@@ -42,18 +42,21 @@ received by a process.
 %patch5 -p1 -b .newsysc
 %patch6 -p1 -b .getdents64
 %endif
-%patch8 -p1 -b .s390
 %ifarch ia64
-%patch9 -p1 -b .ia64
+%patch8 -p1 -b .ia64
 %endif
 %ifarch sparc sparc64
 %patch1 -p1 -b .sparc
 %patch3 -p1 -b .sparc2
 %patch7 -p1 -b .sparc3
-%patch10 -p1 -b .sparc4
+%patch9 -p1 -b .sparc4
 %endif
-%patch11 -p1 -b .incl
-%patch12 -p1 -b .time
+%patch10 -p1 -b .incl
+%patch11 -p1 -b .time
+%ifarch s390 s390x
+%patch12 -p1 -b .s390
+%patch13 -p1 -b .s390-1
+%endif
 
 %build
 ./cvsbuild
@@ -65,7 +68,6 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 mkdir -p ${RPM_BUILD_ROOT}%{_prefix}/bin
 %makeinstall man1dir=${RPM_BUILD_ROOT}%{_mandir}/man1
-strip ${RPM_BUILD_ROOT}%{_prefix}/bin/strace
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +78,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/strace.1*
 
 %changelog
+* Thu Oct 23 2001 Karsten Hopp <karsten@redhat.de>
+- new patch from IBM
+
+* Thu Jul 05 2001 Karsten Hopp <karsten@redhat.de>
+- new patch from IBM
+
+* Mon Jun 11 2001 Than Ngo <than@redhat.com>
+- port s390 patches from IBM
+
+* Wed May 16 2001 Nalin Dahyabhai <nalin@redhat.com>
+- modify new syscall patch to allocate enough heap space in setgroups32()
+
 * Wed Feb 14 2001 Jakub Jelinek <jakub@redhat.com>
 - #include <time.h> in addition to <sys/time.h>
 
