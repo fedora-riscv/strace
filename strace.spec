@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 6a
+Release: 7
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -17,6 +17,9 @@ Patch13: strace-4.4-threads.patch
 Patch14: strace-4.4-threads2.patch
 Patch15: strace-4.4-modify-ldt.patch
 Patch16: strace-4.4-newsyscalls.patch
+Patch17: strace-4.4-threadarea.patch
+Patch18: strace-4.4-sarestorer.patch
+Patch19: strace-4.4-clone-fixes.patch
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -51,12 +54,12 @@ received by a process.
 %patch14 -p1 -b .threads2
 %patch15 -p1 -b .modify-ldt
 %patch16 -p1 -b .newsyscalls
+%patch17 -p1 -b .threadarea
+%patch18 -p1 -b .sarestorer
+%patch19 -p1 -b .clone-fixes
 
 %build
 #./cvsbuild
-%ifarch s390 s390x
-export CFLAGS=-DHAVE_PUTPMSG
-%endif
 %configure
 make
 
@@ -75,7 +78,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
-* Fri Jun 21 2002 Jakub Jelinek <jakub@redhat.com> 4.4-5
+* Wed Aug 28 2002 Jakub Jelinek <jakub@redhat.com> 4.4-7
+- fix strace -f (Roland McGrath, #68994)
+- handle ?et_thread_area, SA_RESTORER (Ulrich Drepper)
+
+* Fri Jun 21 2002 Jakub Jelinek <jakub@redhat.com> 4.4-6
 - handle futexes, *xattr, sendfile64, etc. (Ulrich Drepper)
 - handle modify_ldt (#66894)
 
