@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 6
+Release: 6a
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -54,6 +54,9 @@ received by a process.
 
 %build
 #./cvsbuild
+%ifarch s390 s390x
+export CFLAGS=-DHAVE_PUTPMSG
+%endif
 %configure
 make
 
