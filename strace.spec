@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 1.1
+Release: 3
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -14,7 +14,6 @@ Patch10: strace-4.2-sparc4.patch
 Patch11: strace-4.2.2-include.patch
 Patch12: strace-4.4-atomic.patch
 Patch13: strace-4.4-threads.patch
-Patch14: strace-4.4-threads2.patch
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -46,7 +45,6 @@ received by a process.
 %patch11 -p1 -b .include
 %patch12 -p1 -b .atomic
 %patch13 -p1 -b .threads
-%patch14 -p1 -b .threads2
 
 %build
 #./cvsbuild
@@ -68,15 +66,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
-* Fri May 03 2002 Philip Copeland <bryce@redhat.com> 4.4-1.1
-- 'borrowed' from 7.3 for 7.2-alpha as the older
-  strace no longer rebuilt with the current
-  kernel/gcc headers as it's for 7.2-alpha bumped the
-  version number down to prevent conflicts
-
-* Tue Apr 16 2002 Jakub Jelinek <jakub@redhat.com> 4.4-4
-- fix for the last patch by Jeff Law (#62591)
-
 * Mon Mar  4 2002 Preston Brown <pbrown@redhat.com> 4.4-3
 - integrate patch from Jeff Law to eliminate hang tracing threads
 
