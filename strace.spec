@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.4
-Release: 5
+Release: 6
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -15,6 +15,8 @@ Patch11: strace-4.2.2-include.patch
 Patch12: strace-4.4-atomic.patch
 Patch13: strace-4.4-threads.patch
 Patch14: strace-4.4-threads2.patch
+Patch15: strace-4.4-modify-ldt.patch
+Patch16: strace-4.4-newsyscalls.patch
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -47,6 +49,8 @@ received by a process.
 %patch12 -p1 -b .atomic
 %patch13 -p1 -b .threads
 %patch14 -p1 -b .threads2
+%patch15 -p1 -b .modify-ldt
+%patch16 -p1 -b .newsyscalls
 
 %build
 #./cvsbuild
@@ -68,6 +72,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Fri Jun 21 2002 Jakub Jelinek <jakub@redhat.com> 4.4-5
+- handle futexes, *xattr, sendfile64, etc. (Ulrich Drepper)
+- handle modify_ldt (#66894)
+
 * Thu May 23 2002 Tim Powers <timp@redhat.com>
 - automated rebuild
 
