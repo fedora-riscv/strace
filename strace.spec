@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.3
-Release: 1
+Release: 2
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -38,9 +38,9 @@ received by a process.
 #%patch6 -p1 -b .getdents64
 #%endif
 
-%ifarch s390 s390x
-%patch8 -p1 -b .s390
-%endif
+#%ifarch s390 s390x
+#%patch8 -p1 -b .s390
+#%endif
 
 %ifarch ia64
 %patch9 -p1 -b .ia64
@@ -75,6 +75,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Sun Jul 22 2001 Florian La Roche <Florian.LaRoche@redhat.de>
+- disable s390 patches, they are already included
+
 * Wed Jul 18 2001 Preston Brown <pbrown@redhat.com> 4.3-1
 - new upstream version.  Seems to have integrated most new syscalls
 - tracing threaded programs is now functional.
