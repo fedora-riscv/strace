@@ -1,26 +1,11 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.4
-Release: 9
+Version: 4.4.95
+Release: 2
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
-Source0: %{name}-%{version}.tar.gz
-Patch1: strace-4.2-sparc.patch
-Patch3: strace-4.2-sparc2.patch
-Patch7: strace-4.2-sparc3.patch
-Patch9: strace-4.3-ia64.patch
-Patch10: strace-4.2-sparc4.patch
-Patch11: strace-4.2.2-include.patch
-Patch12: strace-4.4-atomic.patch
-Patch13: strace-4.4-threads.patch
-Patch14: strace-4.4-threads2.patch
-Patch15: strace-4.4-modify-ldt.patch
-Patch16: strace-4.4-newsyscalls.patch
-Patch17: strace-4.4-threadarea.patch
-Patch18: strace-4.4-sarestorer.patch
-Patch19: strace-4.4-clone-fixes.patch
-Patch20: strace-4.4-aio.patch
+Source0: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -36,34 +21,7 @@ received by a process.
 %prep
 %setup -q
 
-#XXX this one should get verified
-#%ifarch ia64
-#%patch9 -p1 -b .ia64
-#%endif
-
-#XXX this one should get verified
-#%ifarch sparc sparc64
-#%patch1 -p1 -b .sparc
-#%patch3 -p1 -b .sparc2
-#%patch7 -p1 -b .sparc3
-#%patch10 -p1 -b .sparc4
-#%endif
-
-%patch11 -p1 -b .include
-%patch12 -p1 -b .atomic
-%patch13 -p1 -b .threads
-%patch14 -p1 -b .threads2
-%patch15 -p1 -b .modify-ldt
-%patch16 -p1 -b .newsyscalls
-%patch17 -p1 -b .threadarea
-%patch18 -p1 -b .sarestorer
-%ifnarch sparc sparc64 ia64
-%patch19 -p1 -b .clone-fixes
-%endif
-%patch20 -p1 -b .aio
-
 %build
-#./cvsbuild
 %configure
 make
 
@@ -72,6 +30,9 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_mandir}/man1
 mkdir -p %{buildroot}%{_bindir}
 %makeinstall man1dir=%{buildroot}%{_mandir}/man1
+
+# remove unpackaged files from the buildroot
+rm -f %{buildroot}%{_bindir}/strace-graph
 
 %clean
 rm -rf %{buildroot}
@@ -82,8 +43,39 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
-* Thu Sep  5 2002 Roland McGrath <roland@redhat.com>
-- newer version of the clone fixing patch to make fork work right
+* Mon Feb 24 2003 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Mon Feb 24 2003 Roland McGrath <roland@redhat.com> 4.4.95-1
+- new upstream version, fixed getresuid/getresgid (#84959)
+
+* Wed Feb 19 2003 Roland McGrath <roland@redhat.com> 4.4.94-1
+- new upstream version, new option -E to set environment variables (#82392)
+
+* Wed Jan 22 2003 Tim Powers <timp@redhat.com> 4.4.93-2
+- rebuilt
+
+* Tue Jan 21 2003 Roland McGrath <roland@redhat.com> 4.4.93-1
+- new upstream version, fixes ppc and s390 bugs, adds missing ptrace requests
+
+* Fri Jan 10 2003 Roland McGrath <roland@redhat.com> 4.4.91-1
+- new upstream version, fixes -f on x86-64
+
+* Fri Jan 10 2003 Roland McGrath <roland@redhat.com> 4.4.90-1
+- new upstream version, fixes all known bugs modulo ia64 and s390 issues
+
+* Fri Jan 03 2003 Florian La Roche <Florian.LaRoche@redhat.de> 4.4-11
+- add further s390 patch from IBM
+
+* Wed Nov 27 2002 Tim Powers <timp@redhat.com> 4.4-10
+- remove unpackaged files from the buildroot
+
+* Mon Oct 07 2002 Phil Knirsch <pknirsch@redhat.com> 4.4-9.1
+- Added latest s390(x) patch.
+
+* Fri Sep 06 2002 Karsten Hopp <karsten@redhat.de> 4.4-9
+- preliminary x86_64 support with an ugly patch to help
+  debugging. Needs cleanup!
 
 * Mon Sep  2 2002 Jakub Jelinek <jakub@redhat.com> 4.4-8
 - newer version of the clone fixing patch (Roland McGrath)
@@ -201,7 +193,7 @@ rm -rf %{buildroot}
 * Tue Apr 06 1999 Preston Brown <pbrown@redhat.com>
 - strip binary
 
-* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
+* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com>
 - auto rebuild in the new build environment (release 16)
 
 * Tue Feb  9 1999 Jeff Johnson <jbj@redhat.com>
