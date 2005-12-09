@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.5.13
-Release: 1
+Release: 1.1
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -75,6 +75,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
+- rebuilt
+
 * Wed Aug  3 2005 Roland McGrath <roland@redhat.com> - 4.5.13-1
 - Fix setsockopt decoding on 64-bit (#162449).
 - Fix typos in socket option name strings (#161578).
