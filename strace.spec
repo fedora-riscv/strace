@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.5.13
-Release: 1.1
+Version: 4.5.14
+Release: 1
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -75,8 +75,15 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
-- rebuilt
+* Mon Jan 16 2006 Roland McGrath <roland@redhat.com> - 4.5.14-1
+- Fix biarch decoding of socket syscalls (#174354).
+- Fix biarch -e support (#173986).
+- Accept numeric syscalls in -e (#174798).
+- Fix ipc syscall decoding (#164755).
+- Improve msgrcv printing (#164757).
+- Man page updates (#165375).
+- Improve mount syscall printing (#165377).
+- Correct printing of restarting syscalls (#165469).
 
 * Wed Aug  3 2005 Roland McGrath <roland@redhat.com> - 4.5.13-1
 - Fix setsockopt decoding on 64-bit (#162449).
