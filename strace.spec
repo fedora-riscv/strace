@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.5.14
-Release: 1
+Release: 1.1
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -75,6 +75,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 4.5.14-1.1
+- rebuilt for new gcc4.1 snapshot and glibc changes
+
 * Mon Jan 16 2006 Roland McGrath <roland@redhat.com> - 4.5.14-1
 - Fix biarch decoding of socket syscalls (#174354).
 - Fix biarch -e support (#173986).
