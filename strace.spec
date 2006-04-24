@@ -8,6 +8,8 @@ URL: http://sourceforge.net/projects/strace/
 Source0: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 
+Patch0: strace-4.5.14-rlimit32.patch
+
 %define strace64_arches ppc64
 
 %description
@@ -41,6 +43,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %prep
 %setup -q
+%patch0
 
 %build
 %configure
