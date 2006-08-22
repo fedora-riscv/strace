@@ -8,6 +8,8 @@ URL: http://sourceforge.net/projects/strace/
 Source0: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 
+Patch1: strace-4.5.14-subcall400.patch
+
 %define strace64_arches ppc64
 
 %description
@@ -42,6 +44,8 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %prep
 %setup -q
 
+%patch1 -p1
+
 %build
 %configure
 make
@@ -75,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 22 2006 Roland McGrath <roland@redhat.com> - 4.5.14-3
+- Fix bogus decoding of syscalls >= 300 (#201462, #202620).
+
 * Fri Jul 14 2006 Jesse Keating <jkeating@redhat.com> - 4.5.14-2
 - rebuild
 
