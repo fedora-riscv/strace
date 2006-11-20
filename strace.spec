@@ -10,6 +10,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 
 Patch1: strace-4.5.14-subcall400.patch
 Patch2: strace-4.5.14-getsiginfo.patch
+Patch3: strace-4.5.14-sysctl-proc.patch
 
 %define strace64_arches ppc64
 
@@ -47,6 +48,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %configure
@@ -84,6 +86,7 @@ rm -rf %{buildroot}
 * Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> - 4.5.14-4
 - Fix ia64 syscall decoding (#206768)
 - Fix build with glibc-2.4.90-33 and up on all arches but ia64
+- Fix build against 2.6.18+ headers
 
 * Tue Aug 22 2006 Roland McGrath <roland@redhat.com> - 4.5.14-3
 - Fix bogus decoding of syscalls >= 300 (#201462, #202620).
