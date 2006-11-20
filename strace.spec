@@ -9,6 +9,7 @@ Source0: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 
 Patch1: strace-4.5.14-subcall400.patch
+Patch2: strace-4.5.14-getsiginfo.patch
 
 %define strace64_arches ppc64
 
@@ -45,6 +46,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
 
 %build
 %configure
@@ -81,6 +83,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> - 4.5.14-4
 - Fix ia64 syscall decoding (#206768)
+- Fix build with glibc-2.4.90-33 and up on all arches but ia64
 
 * Tue Aug 22 2006 Roland McGrath <roland@redhat.com> - 4.5.14-3
 - Fix bogus decoding of syscalls >= 300 (#201462, #202620).
@@ -89,7 +92,7 @@ rm -rf %{buildroot}
 - rebuild
 
 * Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 4.5.14-1.2
-- bump again for double-long bug on ppc(64)
+- bump again for long double bug on ppc{,64}
 
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 4.5.14-1.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
