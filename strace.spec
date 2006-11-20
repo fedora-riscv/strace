@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
 Version: 4.5.14
-Release: 3
+Release: 4
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> - 4.5.14-4
+- Fix ia64 syscall decoding (#206768)
+
 * Tue Aug 22 2006 Roland McGrath <roland@redhat.com> - 4.5.14-3
 - Fix bogus decoding of syscalls >= 300 (#201462, #202620).
 
