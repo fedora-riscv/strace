@@ -1,16 +1,12 @@
 Summary: Tracks and displays system calls associated with a running process.
 Name: strace
-Version: 4.5.14
-Release: 4
+Version: 4.5.15
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
-Source0: %{name}-%{version}.tar.bz2
+Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
-
-Patch1: strace-4.5.14-subcall400.patch
-Patch2: strace-4.5.14-getsiginfo.patch
-Patch3: strace-4.5.14-sysctl-proc.patch
 
 %define strace64_arches ppc64
 
@@ -46,10 +42,6 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-
 %build
 %configure
 make
@@ -83,6 +75,22 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 16 2007 Roland McGrath <roland@redhat.com> - 4.5.15-1
+- biarch fixes (#179740, #192193, #171626, #173050, #218433, #218043)
+- fix -ff -o behavior (#204950, #218435, #193808, #219423)
+- better quotactl printing (#118696)
+- *at, inotify*, pselect6, ppoll and unshare syscalls (#178633, #191275)
+- glibc-2.5 build fixes (#209856)
+- memory corruption fixes (#200621
+- fix race in child setup under -f (#180293)
+- show ipc key values in hex (#198179, #192182)
+- disallow -c with -ff (#187847)
+- Resolves: RHBZ #179740, RHBZ #192193, RHBZ #204950, RHBZ #218435
+- Resolves: RHBZ #193808, RHBZ #219423, RHBZ #171626, RHBZ #173050
+- Resolves: RHBZ #218433, RHBZ #218043, RHBZ #118696, RHBZ #178633
+- Resolves: RHBZ #191275, RHBZ #209856, RHBZ #200621, RHBZ #180293
+- Resolves: RHBZ #198179, RHBZ #198182, RHBZ #187847
+
 * Mon Nov 20 2006 Jakub Jelinek <jakub@redhat.com> - 4.5.14-4
 - Fix ia64 syscall decoding (#206768)
 - Fix build with glibc-2.4.90-33 and up on all arches but ia64
