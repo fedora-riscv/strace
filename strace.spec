@@ -1,12 +1,12 @@
-Summary: Tracks and displays system calls associated with a running process.
+Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.5.15
+Version: 4.5.16
 Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %define strace64_arches ppc64
 
@@ -44,13 +44,11 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %build
 %configure
-make
+make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_mandir}/man1
-mkdir -p %{buildroot}%{_bindir}
-%makeinstall man1dir=%{buildroot}%{_mandir}/man1
+make DESTDIR=%{buildroot} install
 
 # remove unpackaged files from the buildroot
 rm -f %{buildroot}%{_bindir}/strace-graph
@@ -64,6 +62,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
+%doc CREDITS ChangeLog COPYRIGHT NEWS PORTING README
 %{_bindir}/strace
 %{_mandir}/man1/*
 
@@ -75,6 +74,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug  3 2007 Roland McGrath <roland@redhat.com> - 4.5.16-1
+- fix multithread issues (#240962, #240961, #247907)
+- fix spurious SIGSTOP on early interrupt (#240986)
+- fix utime for biarch (#247185)
+- fix -u error message (#247170)
+- better futex syscall printing (##241467)
+- fix argv/envp printing with small -s settings, and for biarch
+- new syscalls: getcpu, eventfd, timerfd, signalfd, epoll_pwait,
+  move_pages, utimensat
+
 * Tue Jan 16 2007 Roland McGrath <roland@redhat.com> - 4.5.15-1
 - biarch fixes (#179740, #192193, #171626, #173050, #218433, #218043)
 - fix -ff -o behavior (#204950, #218435, #193808, #219423)
@@ -372,7 +381,7 @@ rm -rf %{buildroot}
 - strace 3.1 patches carried along for now.
 
 * Sun May 16 1999 Jeff Johnson <jbj@redhat.com>
-- don't rely on (broken!) rpm %patch (#2735)
+- don't rely on (broken!) rpm %%patch (#2735)
 
 * Tue Apr 06 1999 Preston Brown <pbrown@redhat.com>
 - strip binary
