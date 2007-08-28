@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.5.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 28 2007 Roland McGrath <roland@redhat.com> - 4.5.16-2
+- rebuilt
+
 * Fri Aug  3 2007 Roland McGrath <roland@redhat.com> - 4.5.16-1
 - fix multithread issues (#240962, #240961, #247907)
 - fix spurious SIGSTOP on early interrupt (#240986)
