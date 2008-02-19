@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.5.16
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 4.5.16-3
+- Autorebuild for GCC 4.3
+
 * Tue Aug 28 2007 Roland McGrath <roland@redhat.com> - 4.5.16-2
 - rebuilt
 
