@@ -1,14 +1,14 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.5.16
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%define strace64_arches ppc64
+%define strace64_arches ppc64 sparc64
 
 %description
 The strace program intercepts and records the system calls called and
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 26 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-4
+- add sparc64 to strace64 arches
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 4.5.16-3
 - Autorebuild for GCC 4.3
 
