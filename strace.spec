@@ -1,12 +1,13 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.5.16
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
 Patch0: strace-4.5.16-sparc-fix.patch
+Patch1: strace-4.5.16-sparc-socketipc.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %define strace64_arches ppc64 sparc64
@@ -43,6 +44,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %configure
@@ -76,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 15 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-6
+- fix socket and ipc calls on sparc (DaveM)
+
 * Wed Mar 26 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-5
 - fix obviously wrong syscall chunks for sparc
 
