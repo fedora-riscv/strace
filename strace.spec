@@ -1,14 +1,14 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.5.16
-Release: 6%{?dist}
+Version: 4.5.17
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
-Patch0: strace-4.5.16-sparc-fix.patch
-Patch1: strace-4.5.16-sparc-socketipc.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildRequires: libaio-devel, libacl-devel
 
 %define strace64_arches ppc64 sparc64
 
@@ -43,8 +43,6 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 %build
 %configure
@@ -78,20 +76,19 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu May 15 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-6
-- fix socket and ipc calls on sparc (DaveM)
-
-* Wed Mar 26 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-5
-- fix obviously wrong syscall chunks for sparc
-
-* Wed Mar 26 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 4.5.16-4
-- add sparc64 to strace64 arches
-
-* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 4.5.16-3
-- Autorebuild for GCC 4.3
-
-* Tue Aug 28 2007 Roland McGrath <roland@redhat.com> - 4.5.16-2
-- rebuilt
+* Mon Jul 21 2008 Roland McGrath <roland@redhat.com> - 4.5.17-1
+- handle O_CLOEXEC, MSG_CMSG_CLOEXEC (#365781)
+- fix biarch stat64 decoding (#222275)
+- fix spurious "..." in printing of environment strings (#358241)
+- improve prctl decoding (#364401)
+- fix hang wait on exited child with exited child (#354261)
+- fix biarch fork/vfork (-f) tracing (#447475)
+- fix biarch printing of negative argument kill (#430585)
+- fix biarch decoding of error return values (#447587)
+- fix -f tracing of CLONE_VFORK (#455078)
+- fix ia64 register clobberation in -f tracing (#453438)
+- print SO_NODEFER, SA_RESETHAND instead of SA_NOMASK, SA_ONESHOT (#455821)
+- fix futex argument decoding (#448628, #448629)
 
 * Fri Aug  3 2007 Roland McGrath <roland@redhat.com> - 4.5.16-1
 - fix multithread issues (#240962, #240961, #247907)
