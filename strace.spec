@@ -1,14 +1,16 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.5.16
-Release: 2%{?dist}
+Version: 4.5.17
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source0: http://dl.sourceforge.net/strace/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%define strace64_arches ppc64
+BuildRequires: libaio-devel, libacl-devel
+
+%define strace64_arches ppc64 sparc64
 
 %description
 The strace program intercepts and records the system calls called and
@@ -74,8 +76,19 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Aug 28 2007 Roland McGrath <roland@redhat.com> - 4.5.16-2
-- rebuilt
+* Mon Jul 21 2008 Roland McGrath <roland@redhat.com> - 4.5.17-1
+- handle O_CLOEXEC, MSG_CMSG_CLOEXEC (#365781)
+- fix biarch stat64 decoding (#222275)
+- fix spurious "..." in printing of environment strings (#358241)
+- improve prctl decoding (#364401)
+- fix hang wait on exited child with exited child (#354261)
+- fix biarch fork/vfork (-f) tracing (#447475)
+- fix biarch printing of negative argument kill (#430585)
+- fix biarch decoding of error return values (#447587)
+- fix -f tracing of CLONE_VFORK (#455078)
+- fix ia64 register clobberation in -f tracing (#453438)
+- print SO_NODEFER, SA_RESETHAND instead of SA_NOMASK, SA_ONESHOT (#455821)
+- fix futex argument decoding (#448628, #448629)
 
 * Fri Aug  3 2007 Roland McGrath <roland@redhat.com> - 4.5.16-1
 - fix multithread issues (#240962, #240961, #247907)
