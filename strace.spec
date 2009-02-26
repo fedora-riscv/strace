@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.5.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.5.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Thu Aug 28 2008 Roland McGrath <roland@redhat.com> - 4.5.18-1
 - build fix for newer kernel headers (#457291)
 - fix CLONE_VFORK handling (#455078)
