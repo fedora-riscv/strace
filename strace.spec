@@ -1,14 +1,14 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.5.20
-Release: 2%{?dist}
+Version: 4.6
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
-Source0: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.bz2
+Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: libaio-devel, libacl-devel
+BuildRequires: libacl-devel, libaio-devel, time
 
 %define strace64_arches ppc64 sparc64
 
@@ -66,6 +66,9 @@ rm -f %{buildroot}%{_bindir}/strace-graph
 %{copy64} %{buildroot}%{_bindir}/strace %{buildroot}%{_bindir}/strace64
 %endif
 
+%check
+make check
+
 %clean
 rm -rf %{buildroot}
 
@@ -82,6 +85,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Mar 14 2011 Dmitry V. Levin <ldv@altlinux.org> - 4.6-1
+- New upstream release.
+  + fixed a corner case in waitpid handling (#663547).
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.5.20-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
