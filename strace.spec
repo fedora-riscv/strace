@@ -1,12 +1,13 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
+
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch0: strace-fix-ftbfs.patch
 
 BuildRequires: libacl-devel, libaio-devel, time
 
@@ -43,13 +44,13 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %prep
 %setup -q
+%patch0 -p1 -b .ftbfs
 
 %build
 %configure
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
 # remove unpackaged files from the buildroot
@@ -69,11 +70,7 @@ rm -f %{buildroot}%{_bindir}/strace-graph
 %check
 make check
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc CREDITS ChangeLog ChangeLog-CVS COPYING NEWS README
 %{_bindir}/strace
 %{_bindir}/strace-log-merge
@@ -81,11 +78,13 @@ rm -rf %{buildroot}
 
 %ifarch %{strace64_arches}
 %files -n strace64
-%defattr(-,root,root)
 %{_bindir}/strace64
 %endif
 
 %changelog
+* Fri Dec  6 2013 Peter Robinson <pbrobinson@fedoraproject.org> 4.8-3
+- Fix FTBFS
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
