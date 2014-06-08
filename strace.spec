@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: Development/Debuggers
 
@@ -82,6 +82,9 @@ make check
 %endif
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Fri Dec  6 2013 Peter Robinson <pbrobinson@fedoraproject.org> 4.8-3
 - Fix FTBFS
 
