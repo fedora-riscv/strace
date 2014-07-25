@@ -1,13 +1,16 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 Group: Development/Debuggers
 
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
 Patch0: strace-fix-ftbfs.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1122323
+# http://sourceforge.net/p/strace/code/ci/9afc2ee682d2f9fd3ad938756c841d7f0eed5f21/
+Patch1: strace-4.8-ppc64.patch
 
 BuildRequires: libacl-devel, libaio-devel, time
 
@@ -45,6 +48,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %prep
 %setup -q
 %patch0 -p1 -b .ftbfs
+%patch1 -p1 -b .ppc64
 
 %build
 %configure
@@ -82,6 +86,9 @@ make check
 %endif
 
 %changelog
+* Fri Jul 25 2014 Dan Horák <dan[at]danny.cz> - 4.8-5
+- update for ppc64
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
