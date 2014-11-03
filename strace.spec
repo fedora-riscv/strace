@@ -1,11 +1,13 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
+# http://sourceforge.net/p/strace/mailman/message/32937648/
+Patch0: strace-4.9-ioctlent.patch
 
 BuildRequires: libacl-devel, libaio-devel, time
 
@@ -42,6 +44,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure
@@ -79,6 +82,9 @@ make -k check VERBOSE=1
 %endif
 
 %changelog
+* Mon Nov 03 2014 Lubomir Rintel <lkundrak@v3.sk> - 4.9-3
+- Regenerate ioctl entries with proper kernel headers
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
