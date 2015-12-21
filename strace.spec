@@ -1,29 +1,12 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.10
-Release: 3%{?dist}
+Version: 4.11
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
-Patch0: aarch64.patch
-#
-# RHBZ https://bugzilla.redhat.com/show_bug.cgi?id=1201777
-#
-# Patches created with git format-patch -o A dfabccf997dbad325442353926270d5b1289943f
-#
-# Selected minimal set to get package back into buildable state.
-#
-Patch0002: 0002-aarch64-fix-rt_sigreturn-decoding.patch
-Patch0006: 0006-tests-select.test-handle-architectures-using-pselect.patch
-Patch0007: 0007-aarch64-fix-ioctl-decoding.patch
-Patch0014: 0014-aarch64-properly-decode-generic-syscalls.patch
-Patch0015: 0015-stat64-v.test-add-newfstatat-syscall-support.patch
-Patch0016: 0016-tests-uid-use-fchown-instead-of-chown.patch
-Patch0017: 0017-Show-f_flags-field-in-printstatfs.patch
-
-BuildRequires: libacl-devel, libaio-devel, time
-
+BuildRequires: libacl-devel, time
 %define strace64_arches ppc64 sparc64
 
 %description
@@ -57,14 +40,6 @@ The `strace' program in the `strace' package is for 32-bit processes.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch0002 -p1
-%patch0006 -p1
-%patch0007 -p1
-%patch0014 -p1
-%patch0015 -p1
-%patch0016 -p1
-%patch0017 -p1
 
 %build
 %configure
@@ -102,6 +77,10 @@ make -k check VERBOSE=1
 %endif
 
 %changelog
+* Mon Dec 21 2015 Dmitry V. Levin <ldv@altlinux.org> - 4.11-1
+- New upstream release:
+  + print nanoseconds along with seconds in stat family syscalls (#1251176).
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
