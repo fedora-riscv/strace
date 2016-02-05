@@ -2,7 +2,7 @@ Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.11.0.163.9720
 %define srcname %name-4.11.0.163-9720
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
@@ -91,6 +91,9 @@ cat tests/test-suite.log tests/ksysent.log
 %endif
 
 %changelog
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 4.11.0.163.9720-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Fri Jan 15 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.11.0.163.9720-1
 - New upstream snapshot v4.11-163-g972018f:
   + fixed decoding of syscalls unknown to the kernel on s390/s390x (#1298294).
