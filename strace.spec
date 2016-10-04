@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.13
+Version: 4.14
 Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
@@ -100,6 +100,11 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
+* Tue Oct 04 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.14-1
+- v4.13 -> v4.14:
+  + added printing of the mode argument of open and openat syscalls
+    when O_TMPFILE flag is set (#1377846).
+
 * Tue Jul 26 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.13-1
 - v4.12 -> v4.13.
 
