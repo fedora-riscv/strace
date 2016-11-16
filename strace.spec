@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.14
+Version: 4.14.0.100.622a
 Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
@@ -100,6 +100,10 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
+* Wed Nov 16 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.14.0.100.622a-1
+- v4.14 -> v4.14-100-g622af42:
+  + implemented syscall fault injection.
+
 * Tue Oct 04 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.14-1
 - v4.13 -> v4.14:
   + added printing of the mode argument of open and openat syscalls
