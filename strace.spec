@@ -1,12 +1,12 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.15
-Release: 2%{?dist}
+Version: 4.16
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
-%if 0%{?fedora_version} >= 20 || 0%{?centos_version} >= 800 || 0%{?rhel_version} >= 800 || 0%{?scientificlinux_version} >= 800 || 0%{?suse_version} >= 1300
+%if 0%{?fedora} >= 20 || 0%{?centos} >= 8 || 0%{?rhel} >= 8 || 0%{?suse_version} >= 1300
 %define buildrequires_libunwind_devel BuildRequires: libunwind-devel
 %endif
 %ifarch x86_64
@@ -100,8 +100,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
-* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.15-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+* Tue Feb 14 2017 Dmitry V. Levin <ldv@altlinux.org> - 4.16-1
+- v4.15 -> v4.16.
 
 * Wed Dec 14 2016 Dmitry V. Levin <ldv@altlinux.org> - 4.15-1
 - v4.14-100-g622af42 -> v4.15.
