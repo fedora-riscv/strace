@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 4.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: https://strace.io
@@ -101,6 +101,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Wed Jul 05 2017 Dmitry V. Levin <ldv@altlinux.org> - 4.18-1
 - v4.17 -> v4.18.
 
