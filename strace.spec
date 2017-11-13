@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.19
+Version: 4.20
 Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
@@ -102,6 +102,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
+* Mon Nov 13 2017 Dmitry V. Levin <ldv@altlinux.org> - 4.20-1
+- v4.19 -> v4.20.
+
 * Tue Sep 05 2017 Dmitry V. Levin <ldv@altlinux.org> - 4.19-1
 - v4.18 -> v4.19.
 
