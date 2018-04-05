@@ -1,11 +1,12 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.21
+Version: 4.22
 Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 URL: https://strace.io
-Source: https://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
+Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
+BuildRequires: gcc
 %if 0%{?fedora} >= 18 || 0%{?centos} >= 8 || 0%{?rhel} >= 8 || 0%{?suse_version} >= 1200
 BuildRequires: pkgconfig(bluez)
 %endif
@@ -52,7 +53,7 @@ The `strace' program in the `strace' package is for 32-bit processes.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2018 > .year
-echo -n 2018-02-11 > .strace.1.in.date
+echo -n 2018-04-04 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -106,6 +107,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %endif
 
 %changelog
+* Thu Apr 05 2018 Dmitry V. Levin <ldv@altlinux.org> - 4.22-1
+- v4.21 -> v4.22.
+
 * Tue Feb 13 2018 Dmitry V. Levin <ldv@altlinux.org> - 4.21-1
 - v4.20 -> v4.21.
 
