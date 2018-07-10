@@ -97,7 +97,6 @@ find tests* -type f -name '*.log' -print0 |
 echo 'END OF TEST SUITE INFORMATION'
 
 %files
-%{?suse_version:%defattr(-,root,root)}
 %doc CREDITS ChangeLog ChangeLog-CVS COPYING NEWS README
 %{_bindir}/strace
 %{_bindir}/strace-log-merge
@@ -105,7 +104,6 @@ echo 'END OF TEST SUITE INFORMATION'
 
 %ifarch %{strace64_arches}
 %files -n strace64
-%{?suse_version:%defattr(-,root,root)}
 %{_bindir}/strace64
 %endif
 
