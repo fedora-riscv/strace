@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 4.24
+Version: 4.25
 Release: 1%{?dist}
 License: BSD%{?suse_version:-3-Clause}
 Group: Development%{?suse_version:/Tools}/Debuggers
@@ -88,6 +88,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Tue Oct 30 2018 Dmitry V. Levin <ldv@altlinux.org> - 4.25-1
+- v4.24 -> v4.25.
+
 * Tue Aug 14 2018 Dmitry V. Levin <ldv@altlinux.org> - 4.24-1
 - v4.23 -> v4.24.
 
