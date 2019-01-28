@@ -4,7 +4,6 @@ Version: 4.26
 Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1-or-later and GPL-2.0-or-later
-Group: Development%{?suse_version:/Tools}/Debuggers
 URL: https://strace.io
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
 BuildRequires: gcc gzip
