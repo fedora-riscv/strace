@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.0
+Version: 5.1
 Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1-or-later and GPL-2.0-or-later
@@ -95,6 +95,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Wed May 22 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.1-1
+- v5.0 -> v5.1.
+
 * Tue Mar 19 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.0-1
 - v4.26 -> v5.0 (resolves: #478419, #526740, #851457, #1609318,
   #1610774, #1662936, #1676045).
