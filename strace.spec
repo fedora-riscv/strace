@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.1
+Version: 5.2
 Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1-or-later and GPL-2.0-or-later
@@ -48,7 +48,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2019 > .year
-echo -n 2019-03-17 > .strace.1.in.date
+echo -n 2019-07-10 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -95,6 +95,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Fri Jul 12 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.2-1
+- v5.1 -> v5.2.
+
 * Wed May 22 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.1-1
 - v5.0 -> v5.1.
 
