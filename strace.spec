@@ -1,9 +1,9 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.2
-Release: 2%{?dist}
+Version: 5.3
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
-License: LGPL-2.1-or-later and GPL-2.0-or-later
+License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
 # some require Group tag to be absent,
 # some do not care about Group tag at all,
@@ -16,7 +16,7 @@ Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
 BuildRequires: gcc gzip
 
 # Install Bluetooth headers for AF_BLUETOOTH sockets decoding.
-%if 0%{?fedora} >= 18 || 0%{?centos} >= 8 || 0%{?rhel} >= 8 || 0%{?suse_version} >= 1200
+%if 0%{?fedora} >= 18 || 0%{?centos} >= 6 || 0%{?rhel} >= 8 || 0%{?suse_version} >= 1200
 BuildRequires: pkgconfig(bluez)
 %endif
 
@@ -48,7 +48,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2019 > .year
-echo -n 2019-07-10 > .strace.1.in.date
+echo -n 2019-09-25 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -82,7 +82,7 @@ wait
 %{buildroot}%{_bindir}/strace -V
 make %{?_smp_mflags} -k check VERBOSE=1
 echo 'BEGIN OF TEST SUITE INFORMATION'
-tail -n 99999 -- tests*/test-suite.log tests*/ksysent.log
+tail -n 99999 -- tests*/test-suite.log tests*/ksysent.gen.log
 find tests* -type f -name '*.log' -print0 |
 	xargs -r0 grep -H '^KERNEL BUG:' -- ||:
 echo 'END OF TEST SUITE INFORMATION'
@@ -95,8 +95,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+* Wed Sep 25 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.3-1
+- v5.2 -> v5.3.
 
 * Fri Jul 12 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.2-1
 - v5.1 -> v5.2.
