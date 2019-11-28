@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.3
+Version: 5.4
 Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
@@ -12,7 +12,12 @@ License: LGPL-2.1+ and GPL-2.0+
 Group: Development%{?suse_version:/Tools}/Debuggers
 %endif
 URL: https://strace.io
+%if 0%{?fedora} >= 12 || 0%{?centos} >= 6 || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1200
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
+BuildRequires: xz
+%else
+Source: strace-%{version}.tar.gz
+%endif
 BuildRequires: gcc gzip
 
 # Install Bluetooth headers for AF_BLUETOOTH sockets decoding.
@@ -48,7 +53,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2019 > .year
-echo -n 2019-09-25 > .strace.1.in.date
+echo -n 2019-10-07 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -95,6 +100,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Thu Nov 28 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.4-1
+- v5.3 -> v5.4.
+
 * Wed Sep 25 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.3-1
 - v5.2 -> v5.3.
 
