@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.4
-Release: 2%{?dist}
+Version: 5.5
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -52,8 +52,8 @@ received by a process.
 %prep
 %setup -q
 echo -n %version-%release > .tarball-version
-echo -n 2019 > .year
-echo -n 2019-10-07 > .strace.1.in.date
+echo -n 2020 > .year
+echo -n 2020-02-04 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -100,8 +100,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.4-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+* Thu Feb 06 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.5-1
+- v5.4 -> v5.5.
 
 * Thu Nov 28 2019 Dmitry V. Levin <ldv@altlinux.org> - 5.4-1
 - v5.3 -> v5.4.
