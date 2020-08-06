@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.7.0.6.7ab6
-Release: 3%{?dist}
+Version: 5.8
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -53,7 +53,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2020 > .year
-echo -n 2020-04-24 > .strace.1.in.date
+echo -n 2020-06-16 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -100,15 +100,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.0.6.7ab6-3
-- Second attempt - Rebuilt for
-  https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
-
-* Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.0.6.7ab6-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
-
-* Mon Jun 08 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.7.0.6.7ab6-1
-- v5.7 -> v5.7-6-g7ab6497fd.
+* Thu Aug 06 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.8-1
+- v5.7 -> v5.8.
 
 * Mon Jun 01 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.7-1
 - v5.6 -> v5.7.
