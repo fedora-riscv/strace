@@ -14,11 +14,13 @@ Group: Development%{?suse_version:/Tools}/Debuggers
 URL: https://strace.io
 %if 0%{?fedora} >= 12 || 0%{?centos} >= 6 || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1200
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
+Patch0: gcc-11.patch
+Patch1: 0001-noinline.patch
+Patch2: 0002-ipc-xfail.patch
 BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
 %endif
-Patch0: gcc-11.patch
 BuildRequires: gcc gzip
 
 # Install Bluetooth headers for AF_BLUETOOTH sockets decoding.
@@ -59,6 +61,8 @@ received by a process.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 echo -n %version-%release > .tarball-version
 echo -n 2020 > .year
 echo -n 2020-09-23 > .strace.1.in.date
