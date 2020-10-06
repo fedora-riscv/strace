@@ -14,6 +14,8 @@ Group: Development%{?suse_version:/Tools}/Debuggers
 URL: https://strace.io
 %if 0%{?fedora} >= 12 || 0%{?centos} >= 6 || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1200
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
+Patch1: 0001-noinline.patch
+Patch2: 0002-ipc-xfail.patch
 BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
@@ -57,6 +59,8 @@ received by a process.
 
 %prep
 %setup -q
+%patch1 -p1
+%patch2 -p1
 echo -n %version-%release > .tarball-version
 echo -n 2020 > .year
 echo -n 2020-09-23 > .strace.1.in.date
@@ -108,6 +112,7 @@ echo 'END OF TEST SUITE INFORMATION'
 %changelog
 * Mon Oct 05 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-1
 - v5.8 -> v5.9 (resolves: #1035433).
+- Workaround glibc regressions (resolves: #1863744).
 
 * Thu Aug 06 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.8-1
 - v5.7 -> v5.8.

@@ -1,0 +1,204 @@
+Index: strace-5.9/configure
+===================================================================
+--- strace-5.9.orig/configure	2020-09-24 11:18:58.000000000 +0200
++++ strace-5.9/configure	2020-10-06 19:49:07.708680050 +0200
+@@ -678,6 +678,8 @@
+ clock_LIBS
+ timer_LIBS
+ dl_LIBS
++KERNEL_LONG_T_32_BIT_FALSE
++KERNEL_LONG_T_32_BIT_TRUE
+ SIZEOF_KERNEL_LONG_T
+ SIZEOF_LONG
+ ac_ct_AR
+@@ -21947,6 +21949,14 @@
+ 
+ SIZEOF_KERNEL_LONG_T="$ac_cv_sizeof_kernel_long_t"
+ 
++ if test x$SIZEOF_KERNEL_LONG_T == x4; then
++  KERNEL_LONG_T_32_BIT_TRUE=
++  KERNEL_LONG_T_32_BIT_FALSE='#'
++else
++  KERNEL_LONG_T_32_BIT_TRUE='#'
++  KERNEL_LONG_T_32_BIT_FALSE=
++fi
++
+ # The cast to long int works around a bug in the HP C Compiler
+ # version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+ # declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+@@ -25039,6 +25049,10 @@
+   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${KERNEL_LONG_T_32_BIT_TRUE}" && test -z "${KERNEL_LONG_T_32_BIT_FALSE}"; then
++  as_fn_error $? "conditional \"KERNEL_LONG_T_32_BIT\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${ENABLE_STACKTRACE_TRUE}" && test -z "${ENABLE_STACKTRACE_FALSE}"; then
+   as_fn_error $? "conditional \"ENABLE_STACKTRACE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+Index: strace-5.9/tests-m32/Makefile.in
+===================================================================
+--- strace-5.9.orig/tests-m32/Makefile.in	2020-10-06 09:48:41.416722064 +0200
++++ strace-5.9/tests-m32/Makefile.in	2020-10-06 19:50:09.695155401 +0200
+@@ -222,6 +222,8 @@
+ 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
+ @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
+ TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
++	$(am__EXEEXT_3)
+ subdir = tests-m32
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
+@@ -5298,6 +5300,14 @@
+ AM_RECURSIVE_TARGETS = check recheck
+ @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
+ @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
++@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
+ TEST_SUITE_LOG = test-suite.log
+ TEST_EXTENSIONS = @EXEEXT@ .test
+ am__test_logs1 = $(TESTS:=.log)
+@@ -6780,10 +6790,25 @@
+ 	umovestr_cached.test \
+ 	# end of MISC_TESTS
+ 
++@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
++
++# Workaround for broken glibc
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
++@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++
+ XFAIL_TESTS_ = 
+ XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
+ XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
+-XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
+ TEST_LOG_COMPILER = env
+ AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
+ 			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \
+Index: strace-5.9/tests-mx32/Makefile.in
+===================================================================
+--- strace-5.9.orig/tests-mx32/Makefile.in	2020-10-06 09:48:47.323672772 +0200
++++ strace-5.9/tests-mx32/Makefile.in	2020-10-06 19:50:43.044873131 +0200
+@@ -222,6 +222,8 @@
+ 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
+ @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
+ TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
++	$(am__EXEEXT_3)
+ subdir = tests-mx32
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
+@@ -5298,6 +5300,14 @@
+ AM_RECURSIVE_TARGETS = check recheck
+ @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
+ @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
++@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
+ TEST_SUITE_LOG = test-suite.log
+ TEST_EXTENSIONS = @EXEEXT@ .test
+ am__test_logs1 = $(TESTS:=.log)
+@@ -6780,10 +6790,25 @@
+ 	umovestr_cached.test \
+ 	# end of MISC_TESTS
+ 
++@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
++
++# Workaround for broken glibc
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
++@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++
+ XFAIL_TESTS_ = 
+ XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
+ XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
+-XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
+ TEST_LOG_COMPILER = env
+ AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
+ 			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \
+Index: strace-5.9/tests/Makefile.in
+===================================================================
+--- strace-5.9.orig/tests/Makefile.in	2020-10-06 09:47:53.610143253 +0200
++++ strace-5.9/tests/Makefile.in	2020-10-06 19:49:25.669528031 +0200
+@@ -222,6 +222,8 @@
+ 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
+ @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
+ TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
++	$(am__EXEEXT_3)
+ subdir = tests
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
+@@ -5298,6 +5300,14 @@
+ AM_RECURSIVE_TARGETS = check recheck
+ @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
+ @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
++@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
+ TEST_SUITE_LOG = test-suite.log
+ TEST_EXTENSIONS = @EXEEXT@ .test
+ am__test_logs1 = $(TESTS:=.log)
+@@ -6780,10 +6790,25 @@
+ 	umovestr_cached.test \
+ 	# end of MISC_TESTS
+ 
++@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
++
++# Workaround for broken glibc
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
++# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
++@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
++@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++
+ XFAIL_TESTS_ = 
+ XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
+ XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
+-XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
+ TEST_LOG_COMPILER = env
+ AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
+ 			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \
