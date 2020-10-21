@@ -40,165 +40,108 @@ Index: strace-5.9/configure
 Index: strace-5.9/tests-m32/Makefile.in
 ===================================================================
 --- strace-5.9.orig/tests-m32/Makefile.in	2020-10-06 09:48:41.416722064 +0200
-+++ strace-5.9/tests-m32/Makefile.in	2020-10-06 19:50:09.695155401 +0200
-@@ -222,6 +222,8 @@
- 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
- @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
- TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
-+XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
-+	$(am__EXEEXT_3)
- subdir = tests-m32
- ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
- am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
-@@ -5298,6 +5300,14 @@
- AM_RECURSIVE_TARGETS = check recheck
- @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
- @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
-+@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
- TEST_SUITE_LOG = test-suite.log
- TEST_EXTENSIONS = @EXEEXT@ .test
- am__test_logs1 = $(TESTS:=.log)
-@@ -6780,10 +6790,25 @@
++++ strace-5.9/tests-m32/Makefile.in	2020-10-22 04:35:05.329982236 +0200
+@@ -6780,10 +6780,30 @@
  	umovestr_cached.test \
  	# end of MISC_TESTS
  
-+@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
 +
-+# Workaround for broken glibc
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
-+@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++# A temporary workaround for glibc commits
++# 9ebaabeaac1a96b0d91f52902ce1dbf4f5a562dd
++# be9b0b9a012780a403a266c90878efffb9a5f3ca
++# a16d2abd496bd974a88207d5599265aae5ae4880
++TIME64_XFAIL = \
++	ipc_msg.gen.test \
++	ipc_msg-Xabbrev.gen.test \
++	ipc_msg-Xraw.gen.test \
++	ipc_msg-Xverbose.gen.test \
++	ipc_sem.gen.test \
++	ipc_sem-Xabbrev.gen.test \
++	ipc_sem-Xraw.gen.test \
++	ipc_sem-Xverbose.gen.test \
++	ipc_shm.gen.test \
++	ipc_shm-Xabbrev.gen.test \
++	ipc_shm-Xraw.gen.test \
++	ipc_shm-Xverbose.gen.test \
++	# end of TIME64_XFAIL
 +
  XFAIL_TESTS_ = 
  XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
  XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
 -XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) $(TIME64_XFAIL)
  TEST_LOG_COMPILER = env
  AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
  			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \
 Index: strace-5.9/tests-mx32/Makefile.in
 ===================================================================
 --- strace-5.9.orig/tests-mx32/Makefile.in	2020-10-06 09:48:47.323672772 +0200
-+++ strace-5.9/tests-mx32/Makefile.in	2020-10-06 19:50:43.044873131 +0200
-@@ -222,6 +222,8 @@
- 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
- @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
- TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
-+XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
-+	$(am__EXEEXT_3)
- subdir = tests-mx32
- ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
- am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
-@@ -5298,6 +5300,14 @@
- AM_RECURSIVE_TARGETS = check recheck
- @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
- @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
-+@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
- TEST_SUITE_LOG = test-suite.log
- TEST_EXTENSIONS = @EXEEXT@ .test
- am__test_logs1 = $(TESTS:=.log)
-@@ -6780,10 +6790,25 @@
++++ strace-5.9/tests-mx32/Makefile.in	2020-10-22 04:35:09.438944519 +0200
+@@ -6780,10 +6780,30 @@
  	umovestr_cached.test \
  	# end of MISC_TESTS
  
-+@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
 +
-+# Workaround for broken glibc
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
-+@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++# A temporary workaround for glibc commits
++# 9ebaabeaac1a96b0d91f52902ce1dbf4f5a562dd
++# be9b0b9a012780a403a266c90878efffb9a5f3ca
++# a16d2abd496bd974a88207d5599265aae5ae4880
++TIME64_XFAIL = \
++	ipc_msg.gen.test \
++	ipc_msg-Xabbrev.gen.test \
++	ipc_msg-Xraw.gen.test \
++	ipc_msg-Xverbose.gen.test \
++	ipc_sem.gen.test \
++	ipc_sem-Xabbrev.gen.test \
++	ipc_sem-Xraw.gen.test \
++	ipc_sem-Xverbose.gen.test \
++	ipc_shm.gen.test \
++	ipc_shm-Xabbrev.gen.test \
++	ipc_shm-Xraw.gen.test \
++	ipc_shm-Xverbose.gen.test \
++	# end of TIME64_XFAIL
 +
  XFAIL_TESTS_ = 
  XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
  XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
 -XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) $(TIME64_XFAIL)
  TEST_LOG_COMPILER = env
  AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
  			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \
 Index: strace-5.9/tests/Makefile.in
 ===================================================================
 --- strace-5.9.orig/tests/Makefile.in	2020-10-06 09:47:53.610143253 +0200
-+++ strace-5.9/tests/Makefile.in	2020-10-06 19:49:25.669528031 +0200
-@@ -222,6 +222,8 @@
- 	xet_robust_list--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
- @ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_1 = strace-k-demangle.test
- TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_2)
-+XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) \
-+	$(am__EXEEXT_3)
- subdir = tests
- ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
- am__aclocal_m4_deps = $(top_srcdir)/xlat/btrfs_compress_types.m4 \
-@@ -5298,6 +5300,14 @@
- AM_RECURSIVE_TARGETS = check recheck
- @ENABLE_STACKTRACE_TRUE@am__EXEEXT_2 = strace-k.test strace-k-p.test \
- @ENABLE_STACKTRACE_TRUE@	$(am__append_1)
-+@KERNEL_LONG_T_32_BIT_TRUE@am__EXEEXT_3 = ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test
- TEST_SUITE_LOG = test-suite.log
- TEST_EXTENSIONS = @EXEEXT@ .test
- am__test_logs1 = $(TESTS:=.log)
-@@ -6780,10 +6790,25 @@
++++ strace-5.9/tests/Makefile.in	2020-10-22 04:35:00.113030124 +0200
+@@ -6780,10 +6780,30 @@
  	umovestr_cached.test \
  	# end of MISC_TESTS
  
-+@KERNEL_LONG_T_32_BIT_FALSE@IPC_XFAIL = 
 +
-+# Workaround for broken glibc
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26636
-+# https://sourceware.org/bugzilla/show_bug.cgi?id=26639
-+@KERNEL_LONG_T_32_BIT_TRUE@IPC_XFAIL = \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_msg-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xabbrev.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xraw.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	ipc_shm-Xverbose.gen.test \
-+@KERNEL_LONG_T_32_BIT_TRUE@	# end of IPC_XFAIL
++# A temporary workaround for glibc commits
++# 9ebaabeaac1a96b0d91f52902ce1dbf4f5a562dd
++# be9b0b9a012780a403a266c90878efffb9a5f3ca
++# a16d2abd496bd974a88207d5599265aae5ae4880
++TIME64_XFAIL = \
++	ipc_msg.gen.test \
++	ipc_msg-Xabbrev.gen.test \
++	ipc_msg-Xraw.gen.test \
++	ipc_msg-Xverbose.gen.test \
++	ipc_sem.gen.test \
++	ipc_sem-Xabbrev.gen.test \
++	ipc_sem-Xraw.gen.test \
++	ipc_sem-Xverbose.gen.test \
++	ipc_shm.gen.test \
++	ipc_shm-Xabbrev.gen.test \
++	ipc_shm-Xraw.gen.test \
++	ipc_shm-Xverbose.gen.test \
++	# end of TIME64_XFAIL
 +
  XFAIL_TESTS_ = 
  XFAIL_TESTS_m32 = $(STACKTRACE_TESTS)
  XFAIL_TESTS_mx32 = $(STACKTRACE_TESTS)
 -XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH))
++XFAIL_TESTS = $(XFAIL_TESTS_$(MPERS_NAME)) $(XFAIL_TESTS_$(ARCH)) $(TIME64_XFAIL)
  TEST_LOG_COMPILER = env
  AM_TEST_LOG_FLAGS = STRACE_ARCH=$(ARCH) STRACE_NATIVE_ARCH=$(NATIVE_ARCH) \
  			SIZEOF_KERNEL_LONG_T=$(SIZEOF_KERNEL_LONG_T) \

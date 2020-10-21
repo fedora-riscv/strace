@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 5.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -17,6 +17,8 @@ Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
 Patch0: gcc-11.patch
 Patch1: 0001-noinline.patch
 Patch2: 0002-ipc-xfail.patch
+Patch3: 0003-tests-update-semtimedop-test.patch
+Patch4: 0004-tests-add-own-pselect6-syscall-wrapper-to-the-test.patch
 BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
@@ -63,6 +65,8 @@ received by a process.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 echo -n %version-%release > .tarball-version
 echo -n 2020 > .year
 echo -n 2020-09-23 > .strace.1.in.date
@@ -112,6 +116,10 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Wed Oct 21 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-2
+- Mark even more tests as XFAIL so the build succeedes
+  (references: #1886468, #1886480).
+
 * Mon Oct 05 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-1
 - v5.8 -> v5.9 (resolves: #1035433).
 

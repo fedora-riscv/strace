@@ -1,0 +1,255 @@
+From 5cefe1876579dc0669bbd5490eed26d00e281c18 Mon Sep 17 00:00:00 2001
+From: Eugene Syromyatnikov <evgsyr@gmail.com>
+Date: Thu, 22 Oct 2020 04:28:31 +0200
+Subject: [PATCH 4/4] tests: add own pselect6 syscall wrapper to the test
+
+---
+ tests/pselect6.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
+
+Index: strace-5.9/tests/pselect6.c
+===================================================================
+--- strace-5.9.orig/tests/pselect6.c	2019-09-25 03:02:03.000000000 +0200
++++ strace-5.9/tests/pselect6.c	2020-10-22 04:37:09.583841685 +0200
+@@ -28,6 +28,23 @@
+ {
+ }
+ 
++static long
++pselect6(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
++	 const struct timespec *timeout, const sigset_t *sigmask)
++{
++	struct {
++		kernel_ulong_t ss;
++		kernel_ulong_t ss_len;
++	} data = { .ss = (uintptr_t) sigmask, .ss_len = NSIG_BYTES };
++	struct timespec ts;
++
++	if (timeout)
++		ts = *timeout;
++
++	return syscall(__NR_pselect6, nfds, readfds, writefds, exceptfds,
++		       timeout ? &ts : NULL, &data);
++}
++
+ int main(int ac, char **av)
+ {
+ 	int fds[2];
+@@ -58,7 +75,7 @@
+ 	FD_SET(fds[1], set[1]);
+ 	FD_SET(1, set[2]);
+ 	FD_SET(2, set[2]);
+-	int rc = pselect(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
++	int rc = pselect6(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
+ 	if (rc < 0)
+ 		perror_msg_and_skip("pselect");
+ 	assert(rc == 1);
+@@ -90,7 +107,7 @@
+ 	 */
+ 	FD_ZERO(set[0]);
+ 	FD_SET(fds[1], set[0]);
+-	assert(pselect(-1, NULL, set[0], NULL, NULL, &mask) == -1);
++	assert(pselect6(-1, NULL, set[0], NULL, NULL, &mask) == -1);
+ 	printf("pselect6(-1, NULL, %p, NULL, NULL, {[HUP CHLD], %u}) "
+ 	       "= -1 EINVAL (%m)\n", set[0], NSIG_BYTES);
+ 
+@@ -102,7 +119,7 @@
+ 	FD_ZERO(set[1]);
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 123;
+-	assert(pselect(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
++	assert(pselect6(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
+ 	printf("pselect6(%d, [%d], [], NULL, {tv_sec=0, tv_nsec=123}"
+ 	       ", {[HUP CHLD], %u}) = 0 (Timeout)\n",
+ 	       FD_SETSIZE + 1, fds[0], NSIG_BYTES);
+@@ -112,7 +129,7 @@
+ 	 */
+ 	tm.ts.tv_sec = 0xdeadbeefU;
+ 	tm.ts.tv_nsec = 0xfacefeedU;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -121,7 +138,7 @@
+ 
+ 	tm.ts.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+ 	tm.ts.tv_nsec = (long) 0xbadc0dedfacefeedLL;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -133,7 +150,7 @@
+ 
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 222222222;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL, {tv_sec=0, tv_nsec=222222222}"
+ 	       ", {[HUP CHLD], %u})"
+ 	       " = ? ERESTARTNOHAND (To be restarted if no handler)\n",
+Index: strace-5.9/tests-m32/pselect6.c
+===================================================================
+--- strace-5.9.orig/tests-m32/pselect6.c	2019-09-25 03:02:03.000000000 +0200
++++ strace-5.9/tests-m32/pselect6.c	2020-10-22 04:37:31.789637854 +0200
+@@ -28,6 +28,23 @@
+ {
+ }
+ 
++static long
++pselect6(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
++	 const struct timespec *timeout, const sigset_t *sigmask)
++{
++	struct {
++		kernel_ulong_t ss;
++		kernel_ulong_t ss_len;
++	} data = { .ss = (uintptr_t) sigmask, .ss_len = NSIG_BYTES };
++	struct timespec ts;
++
++	if (timeout)
++		ts = *timeout;
++
++	return syscall(__NR_pselect6, nfds, readfds, writefds, exceptfds,
++		       timeout ? &ts : NULL, &data);
++}
++
+ int main(int ac, char **av)
+ {
+ 	int fds[2];
+@@ -58,7 +75,7 @@
+ 	FD_SET(fds[1], set[1]);
+ 	FD_SET(1, set[2]);
+ 	FD_SET(2, set[2]);
+-	int rc = pselect(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
++	int rc = pselect6(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
+ 	if (rc < 0)
+ 		perror_msg_and_skip("pselect");
+ 	assert(rc == 1);
+@@ -90,7 +107,7 @@
+ 	 */
+ 	FD_ZERO(set[0]);
+ 	FD_SET(fds[1], set[0]);
+-	assert(pselect(-1, NULL, set[0], NULL, NULL, &mask) == -1);
++	assert(pselect6(-1, NULL, set[0], NULL, NULL, &mask) == -1);
+ 	printf("pselect6(-1, NULL, %p, NULL, NULL, {[HUP CHLD], %u}) "
+ 	       "= -1 EINVAL (%m)\n", set[0], NSIG_BYTES);
+ 
+@@ -102,7 +119,7 @@
+ 	FD_ZERO(set[1]);
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 123;
+-	assert(pselect(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
++	assert(pselect6(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
+ 	printf("pselect6(%d, [%d], [], NULL, {tv_sec=0, tv_nsec=123}"
+ 	       ", {[HUP CHLD], %u}) = 0 (Timeout)\n",
+ 	       FD_SETSIZE + 1, fds[0], NSIG_BYTES);
+@@ -112,7 +129,7 @@
+ 	 */
+ 	tm.ts.tv_sec = 0xdeadbeefU;
+ 	tm.ts.tv_nsec = 0xfacefeedU;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -121,7 +138,7 @@
+ 
+ 	tm.ts.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+ 	tm.ts.tv_nsec = (long) 0xbadc0dedfacefeedLL;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -133,7 +150,7 @@
+ 
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 222222222;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL, {tv_sec=0, tv_nsec=222222222}"
+ 	       ", {[HUP CHLD], %u})"
+ 	       " = ? ERESTARTNOHAND (To be restarted if no handler)\n",
+Index: strace-5.9/tests-mx32/pselect6.c
+===================================================================
+--- strace-5.9.orig/tests-mx32/pselect6.c	2019-09-25 03:02:03.000000000 +0200
++++ strace-5.9/tests-mx32/pselect6.c	2020-10-22 04:37:34.579612244 +0200
+@@ -28,6 +28,23 @@
+ {
+ }
+ 
++static long
++pselect6(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
++	 const struct timespec *timeout, const sigset_t *sigmask)
++{
++	struct {
++		kernel_ulong_t ss;
++		kernel_ulong_t ss_len;
++	} data = { .ss = (uintptr_t) sigmask, .ss_len = NSIG_BYTES };
++	struct timespec ts;
++
++	if (timeout)
++		ts = *timeout;
++
++	return syscall(__NR_pselect6, nfds, readfds, writefds, exceptfds,
++		       timeout ? &ts : NULL, &data);
++}
++
+ int main(int ac, char **av)
+ {
+ 	int fds[2];
+@@ -58,7 +75,7 @@
+ 	FD_SET(fds[1], set[1]);
+ 	FD_SET(1, set[2]);
+ 	FD_SET(2, set[2]);
+-	int rc = pselect(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
++	int rc = pselect6(fds[1] + 1, set[0], set[1], set[2], NULL, NULL);
+ 	if (rc < 0)
+ 		perror_msg_and_skip("pselect");
+ 	assert(rc == 1);
+@@ -90,7 +107,7 @@
+ 	 */
+ 	FD_ZERO(set[0]);
+ 	FD_SET(fds[1], set[0]);
+-	assert(pselect(-1, NULL, set[0], NULL, NULL, &mask) == -1);
++	assert(pselect6(-1, NULL, set[0], NULL, NULL, &mask) == -1);
+ 	printf("pselect6(-1, NULL, %p, NULL, NULL, {[HUP CHLD], %u}) "
+ 	       "= -1 EINVAL (%m)\n", set[0], NSIG_BYTES);
+ 
+@@ -102,7 +119,7 @@
+ 	FD_ZERO(set[1]);
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 123;
+-	assert(pselect(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
++	assert(pselect6(FD_SETSIZE + 1, set[0], set[1], NULL, &tm.ts, &mask) == 0);
+ 	printf("pselect6(%d, [%d], [], NULL, {tv_sec=0, tv_nsec=123}"
+ 	       ", {[HUP CHLD], %u}) = 0 (Timeout)\n",
+ 	       FD_SETSIZE + 1, fds[0], NSIG_BYTES);
+@@ -112,7 +129,7 @@
+ 	 */
+ 	tm.ts.tv_sec = 0xdeadbeefU;
+ 	tm.ts.tv_nsec = 0xfacefeedU;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -121,7 +138,7 @@
+ 
+ 	tm.ts.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+ 	tm.ts.tv_nsec = (long) 0xbadc0dedfacefeedLL;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, NULL) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL"
+ 	       ", {tv_sec=%lld, tv_nsec=%llu}, {NULL, %u}) = %s\n",
+ 	       (long long) tm.ts.tv_sec,
+@@ -133,7 +150,7 @@
+ 
+ 	tm.ts.tv_sec = 0;
+ 	tm.ts.tv_nsec = 222222222;
+-	assert(pselect(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
++	assert(pselect6(0, NULL, NULL, NULL, &tm.ts, &mask) == -1);
+ 	printf("pselect6(0, NULL, NULL, NULL, {tv_sec=0, tv_nsec=222222222}"
+ 	       ", {[HUP CHLD], %u})"
+ 	       " = ? ERESTARTNOHAND (To be restarted if no handler)\n",
