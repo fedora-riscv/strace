@@ -19,3 +19,24 @@ index e25e32a..d23715c 100644
  }
  
  static void
+diff --git a/mmsghdr.c b/mmsghdr.c
+index 3fede19..5db35d8 100644
+--- a/mmsghdr.c
++++ b/mmsghdr.c
+@@ -78,6 +78,8 @@ static void
+ save_mmsgvec_namelen(struct tcb *const tcp, kernel_ulong_t addr,
+ 		     unsigned int len, const char *const timeout)
+ {
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Warray-bounds"
+ 	if (len > IOV_MAX)
+ 		len = IOV_MAX;
+ 
+@@ -99,6 +101,7 @@ save_mmsgvec_namelen(struct tcb *const tcp, kernel_ulong_t addr,
+ 	data->count = i;
+ 
+ 	set_tcb_priv_data(tcp, data, free_mmsgvec_data);
++#pragma GCC diagnostic pop
+ }
+ 
+ static void
