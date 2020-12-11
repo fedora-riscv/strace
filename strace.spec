@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 5.9
-Release: 3%{?dist}
+Release: 2%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -14,7 +14,6 @@ Group: Development%{?suse_version:/Tools}/Debuggers
 URL: https://strace.io
 %if 0%{?fedora} >= 12 || 0%{?centos} >= 6 || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1200
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
-Patch0: gcc-11.patch
 Patch1: 0001-noinline.patch
 Patch2: 0002-ipc-xfail.patch
 Patch3: 0003-tests-update-semtimedop-test.patch
@@ -62,7 +61,6 @@ received by a process.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -100,12 +98,6 @@ done
 wait
 
 %check
-# The tests are riddled with an idiom that triggers a false positives
-# from gcc-11.  Out of bounds issues in the testsuite are not
-# particularly important, so we just make them non-fatal
-sed -i "s/-Werror$/-Werror -Wno-error=array-bounds -Wno-error=stringop-overread/" tests/Makefile
-sed -i "s/-Werror$/-Werror -Wno-error=array-bounds -Wno-error=stringop-overread/" tests-m32/Makefile
-sed -i "s/-Werror$/-Werror -Wno-error=array-bounds -Wno-error=stringop-overread/" tests-mx32/Makefile
 %{buildroot}%{_bindir}/strace -V
 %make_build -k check VERBOSE=1
 echo 'BEGIN OF TEST SUITE INFORMATION'
@@ -122,18 +114,12 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Wed Oct 21 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-3
-- Work around more gcc-11 false positive diagnostics
-
 * Wed Oct 21 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-2
 - Mark even more tests as XFAIL so the build succeedes
   (references: #1886468, #1886480).
 
 * Mon Oct 05 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-1
 - v5.8 -> v5.9 (resolves: #1035433).
-
-* Wed Aug 19 2020 Jeff Law <law@redhat.com> - 5.8-2
-- Work around gcc-11 false positive diagnostic
 
 * Thu Aug 06 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.8-1
 - v5.7 -> v5.8.
