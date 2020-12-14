@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.9
-Release: 2%{?dist}
+Version: 5.10
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -14,10 +14,6 @@ Group: Development%{?suse_version:/Tools}/Debuggers
 URL: https://strace.io
 %if 0%{?fedora} >= 12 || 0%{?centos} >= 6 || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1200
 Source: https://strace.io/files/%{version}/strace-%{version}.tar.xz
-Patch1: 0001-noinline.patch
-Patch2: 0002-ipc-xfail.patch
-Patch3: 0003-tests-update-semtimedop-test.patch
-Patch4: 0004-tests-add-own-pselect6-syscall-wrapper-to-the-test.patch
 BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
@@ -61,13 +57,9 @@ received by a process.
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 echo -n %version-%release > .tarball-version
 echo -n 2020 > .year
-echo -n 2020-09-23 > .strace.1.in.date
+echo -n 2020-11-29 > .strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -114,12 +106,11 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Wed Oct 21 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-2
-- Mark even more tests as XFAIL so the build succeedes
-  (references: #1886468, #1886480).
+* Mon Dec 14 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.10-1
+- v5.9 -> v5.10.
 
-* Mon Oct 05 2020 Eugene Syromyatnikov <esyr@redhat.com> - 5.9-1
-- v5.8 -> v5.9 (resolves: #1035433).
+* Thu Sep 24 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.9-1
+- v5.8 -> v5.9.
 
 * Thu Aug 06 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.8-1
 - v5.7 -> v5.8.
