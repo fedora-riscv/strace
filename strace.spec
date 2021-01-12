@@ -18,6 +18,7 @@ BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
 %endif
+BuildRequires: make
 BuildRequires: gcc gzip
 
 # Install Bluetooth headers for AF_BLUETOOTH sockets decoding.
