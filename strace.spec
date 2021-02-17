@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.10
-Release: 2%{?dist}
+Version: 5.11
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -18,8 +18,7 @@ BuildRequires: xz
 %else
 Source: strace-%{version}.tar.gz
 %endif
-BuildRequires: make
-BuildRequires: gcc gzip
+BuildRequires: gcc gzip make
 
 # Install Bluetooth headers for AF_BLUETOOTH sockets decoding.
 %if 0%{?fedora} >= 18 || 0%{?centos} >= 6 || 0%{?rhel} >= 8 || 0%{?suse_version} >= 1200
@@ -59,8 +58,8 @@ received by a process.
 %prep
 %setup -q
 echo -n %version-%release > .tarball-version
-echo -n 2020 > .year
-echo -n 2020-11-29 > .strace.1.in.date
+echo -n 2021 > .year
+echo -n 2021-02-07 > doc/.strace.1.in.date
 
 %build
 echo 'BEGIN OF BUILD ENVIRONMENT INFORMATION'
@@ -80,9 +79,6 @@ CFLAGS_FOR_BUILD="$RPM_OPT_FLAGS"; export CFLAGS_FOR_BUILD
 
 %install
 %make_install
-
-# remove unpackaged files from the buildroot
-rm -f %{buildroot}%{_bindir}/strace-graph
 
 # some say uncompressed changelog files are too big
 for f in ChangeLog ChangeLog-CVS; do
@@ -107,8 +103,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.10-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+* Wed Feb 17 2021 Dmitry V. Levin <ldv@altlinux.org> - 5.11-1
+- v5.10 -> v5.11.
 
 * Mon Dec 14 2020 Dmitry V. Levin <ldv@altlinux.org> - 5.10-1
 - v5.9 -> v5.10.
