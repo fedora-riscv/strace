@@ -1,7 +1,7 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
 Version: 5.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
 # Some distros require Group tag to be present,
@@ -107,6 +107,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Sat Jan 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.16-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Mon Jan 10 2022 Dmitry V. Levin <ldv@strace.io> - 5.16-1
 - v5.15 -> v5.16.
 
