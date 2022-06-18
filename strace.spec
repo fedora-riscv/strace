@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.17
+Version: 5.18
 Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
 License: LGPL-2.1+ and GPL-2.0+
@@ -62,7 +62,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2022 > .year
-echo -n 2022-01-18 > doc/.strace.1.in.date
+echo -n 2022-04-02 > doc/.strace.1.in.date
 echo -n 2022-01-01 > doc/.strace-log-merge.1.in.date
 
 %build
@@ -107,6 +107,9 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
+* Sat Jun 18 2022 Dmitry V. Levin <ldv@strace.io> - 5.18-1
+- v5.17 -> v5.18.
+
 * Sat Mar 26 2022 Dmitry V. Levin <ldv@strace.io> - 5.17-1
 - v5.16 -> v5.17 (resolves: #2047030).
 
