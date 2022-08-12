@@ -1,9 +1,16 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 5.18
-Release: 2%{?dist}
+Version: 5.19
+Release: 1%{?dist}
 # The test suite is GPLv2+, all the rest is LGPLv2.1+.
+%if 0%{?fedora} >= 35 || 0%{?centos} >= 9 || 0%{?rhel} >= 9
+# Some distros are special and have decided that they do not recognise
+# the existence of deprecated forms of SPDX license identifiers,
+# so they complain about them being "Unapproved".
+License: LGPL-2.1-or-later and GPL-2.0-or-later
+%else
 License: LGPL-2.1+ and GPL-2.0+
+%endif
 # Some distros require Group tag to be present,
 # some require Group tag to be absent,
 # some do not care about Group tag at all,
@@ -62,7 +69,7 @@ received by a process.
 %setup -q
 echo -n %version-%release > .tarball-version
 echo -n 2022 > .year
-echo -n 2022-04-02 > doc/.strace.1.in.date
+echo -n 2022-07-19 > doc/.strace.1.in.date
 echo -n 2022-01-01 > doc/.strace-log-merge.1.in.date
 
 %build
@@ -107,8 +114,8 @@ echo 'END OF TEST SUITE INFORMATION'
 %{_mandir}/man1/*
 
 %changelog
-* Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.18-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+* Fri Aug 12 2022 Dmitry V. Levin <ldv@strace.io> - 5.19-1
+- v5.18 -> v5.19.
 
 * Sat Jun 18 2022 Dmitry V. Levin <ldv@strace.io> - 5.18-1
 - v5.17 -> v5.18.
